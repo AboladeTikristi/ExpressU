@@ -9,7 +9,6 @@ const cors=require('cors')
 const mongoose=require("mongoose")
 app.use(cors())
 require('dotenv').config()
-// const URI="mongodb+srv://AboladeTikristi:tikristi@cluster0.8i7iv.mongodb.net/mini_chat?retryWrites=true&w=majority"
 const URI=process.env.MONGO_URI;
 mongoose.connect(URI,(err)=>{
       if (err) {
