@@ -7,7 +7,10 @@ app.use(bodyParser.json({limit:"50mb"}))
 var messageController = require('./controllers/message.controller')
 const cors=require('cors')
 const mongoose=require("mongoose")
-const URI="mongodb+srv://AboladeTikristi:tikristi@cluster0.8i7iv.mongodb.net/mini_chat?retryWrites=true&w=majority"
+app.use(cors())
+require('dotenv').config()
+// const URI="mongodb+srv://AboladeTikristi:tikristi@cluster0.8i7iv.mongodb.net/mini_chat?retryWrites=true&w=majority"
+const URI=process.env.MONGO_URI;
 mongoose.connect(URI,(err)=>{
       if (err) {
         console.log("mongoose not connected yet")
@@ -19,8 +22,7 @@ mongoose.connect(URI,(err)=>{
      
     }
 })
-app.use(cors())
-require('dotenv').config()
+
 const PORT=process.env.PORT||5000
 // app.get('/*'),(req,res)=>{
 //   res.sendFile(__dirname+"/build/index.html")
