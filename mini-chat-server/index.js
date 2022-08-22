@@ -26,31 +26,33 @@ const PORT=process.env.PORT||5000
 // app.get('/*'),(req,res)=>{
 //   res.sendFile(__dirname+"/build/index.html")
 // }
-const userRouter=require("./routes/user.route")
-app.use(userRouter)
 var connection=app.listen(PORT,()=>{
     console.log(`app is listening on port ${PORT}`)
 })
-// const socketServer=require('socket.io')
-// const io=socketServer(connection,{cors:{options:"*"}})
+//   const socketServer=require('socket.io')
+//   const io=socketServer(connection,{cors:{options:"*"}})
 // io.on("connection", (socket) => {
 //   console.log('A Connection has been made')
+//   // messageController.sendMessage(io);
 //   socket.on('disconnect', ()=> {
 //       console.log('A disconnection has been made')
 //   })
 // })
+const userRouter=require("./routes/user.route")
+app.use(userRouter)
+
 // const socketServer=require('socket.io')
 // const io=socketServer(connection,{cors:{options:"*"}})
 // io.on('connection',(socket)=>{
 //  console.log("connected successfully")
 //  setInterval(messageController.sendMessage,5000);
 //  messageController.sendMessage(io);
-// // console.log(socket.id)
-// // socket.on('sendMessage',(message)=>{
-// //   console.log(message)
-// //   io.emit("receiveMessage",message)
-// // })
-// // socket.on('disconnect',()=>{
-// // console.log("Disconnected successfully")
-// // });
+// console.log(socket.id)
+// socket.on('sendMessage',(message)=>{
+//   console.log(message)
+//   io.emit("receiveMessage",message)
+// })
+// socket.on('disconnect',()=>{
+// console.log("Disconnected successfully")
+// });
 // })

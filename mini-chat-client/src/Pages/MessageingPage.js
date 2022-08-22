@@ -3,20 +3,29 @@ import Naver from './Naver'
 import pic from "../images/expressU.png"
 import {useNavigate,Link} from 'react-router-dom'
 import axios from 'axios'
+import io from 'socket.io-client'
 
-function MessageingPage({socket}) {
+function MessageingPage({}) {
+  
+   
   const [allUsers, setallUsers] = useState([])
   const [presentUser, setpresentUser] = useState([])
   const [messagePerson, setmessagePerson] = useState('')
   const [recieveIndex, setrecieveIndex] = useState()
   const [response, setresponse] = useState("")
   const [allmessages, setallmessages] = useState([])
+  const [sendMessaged, setsendMessaged] = useState(null)
+  const [receiveMessage, setreceiveMessage] = useState(null)
   const navigate=useNavigate()
   const token=localStorage.token
   const url='http://localhost:5001/allUsers'
   const url2='http://localhost:5001/presentUser'
   const url3='http://localhost:5001/allmessages'
   const messageUrl='http://localhost:5001/messages'
+  const endpoint='http://localhost:8800'
+  const socket= useRef()
+  const [OnlineUsers, setOnlineUsers] = useState([])
+
 //   const url='https://instagram-v-tk.herokuapp.com/allUsers'
 //   const url2='https://instagram-v-tk.herokuapp.com/presentUser'
 //   const url3='https://instagram-v-tk.herokuapp.com/allmessages'
@@ -30,6 +39,7 @@ function MessageingPage({socket}) {
   const general = useRef(null)
   const heading = useRef(null)
   const message = useRef(null)
+  
 //   const firs = useRef(null)
 // socket.current.on('receiveMessage',(result)=>{
 //     console.log(result)
@@ -41,7 +51,14 @@ function MessageingPage({socket}) {
 //     // console.log(message)
   
 // }
+
   useEffect(() => {
+    if (sendMessaged!==null) {
+        socket.current.emit('send-message',sendMessaged)
+    }
+  }, [sendMessaged])
+  useEffect(() => {
+                socket.current= io(endpoint)
                 axios.get(url2,
                     {
                     headers:{
@@ -52,6 +69,10 @@ function MessageingPage({socket}) {
             }).then((res)=>{
                     if (res.data.status) {
                         setpresentUser(res.data.userDetails)
+                        socket.current.emit("new-user-add",res.data.userDetails._id)
+                        socket.current.on('get-users',(users)=>{
+                          setOnlineUsers(users);
+                        })
                         // console.log(res.data)
                     }
                     else{
@@ -75,13 +96,40 @@ function MessageingPage({socket}) {
                     setallmessages(res.data.result)
 
                   })
-   },[response])
-//  const [messages, setMessages] = useState([]);
-//     useEffect(() => {
-//     socket.on("message", (message) => {
-//     setMessages((messages) => [...messages, message]);
-//   });
-// }, []);
+   },[response,allmessages])
+    
+ useEffect(() => {
+   
+    socket.current.on('receive-message', (data)=>{
+         
+         console.log(data)
+        setreceiveMessage(data)
+        console.log('here')
+    })
+  }, [])
+  
+ useEffect(() => {
+     console.log('hey')
+    if (receiveMessage!==null) {
+        console.log('datareceived', receiveMessage)
+        var ind=allmessages.findIndex(o => o.senderId===presentUser._id && o.receiverId===messagePerson||o.receiverId===presentUser._id && o.senderId===messagePerson)
+        console.log(ind)
+        // setallmessages([...allmessages[ind].messageDetails,receiveMessage])
+        allmessages[ind].messageDetails.push(receiveMessage)
+        setallmessages(allmessages)
+        console.log(allmessages)
+        setresponse(receiveMessage.message)
+        console.log(receiveMessage.message)
+        console.log(allmessages)
+         
+        // socket.current.emit('send-message',sendMessaged)
+    }
+  }, [receiveMessage])
+  
+
+
+
+   
    
    const showMessageTab=(a)=>{
     alert(a)
@@ -140,6 +188,7 @@ function MessageingPage({socket}) {
             date,
             time
         }
+      
 
         console.log(detailsArray)
         axios.post(url3,detailsArray).then((res)=>{
@@ -154,6 +203,7 @@ function MessageingPage({socket}) {
             }
             
         })
+        setsendMessaged({...detailsArray,})
         
     }
   return (

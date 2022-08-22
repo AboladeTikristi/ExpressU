@@ -235,33 +235,55 @@ const allInfo=(req,res)=>{
     })
 }
 const uploadProfile=(req,res)=>{
+    console.log(req.body)
     const file=req.body.file 
     const id1=req.body._id
     console.log(file)
-    cloudinary.v2.uploader.upload(file,
-        {folder: 'InstagramProfile',
-         public_id:`/${id1}`,
-         format: 'jpg' },
-    
-            (err, result)=> {
-                if (err){
-                    console.log(err)
-                      res.send({message:"upload failed"})
-                }
-                else{console.log(result)
-                    userModel.updateMany({ _id:id1}, { $set: {firstname:req.body.firstname,file:result.secure_url}}, function(err,result1) {
-                        if (err) {
-                         console.log(err);
-                        }
-                        else{
-                            console.log(result1)
-                            res.send({message:"file saved successfully",image:result.secure_url})
-                        }
-                       });
-                   
-                }
-                
-     });
+    if(file===""){
+        cloudinary.v2.uploader.upload(file,
+            {folder: 'InstagramProfile',
+             public_id:`/${id1}`,
+             format: 'jpg' },
+        
+                (err, result)=> {
+                    if (err){
+                        console.log(err)
+                          res.send({message:"upload failed",err,status:false})
+                    }
+                    else{console.log(result)
+                        userModel.updateMany({ _id:id1}, { $set: {
+                            firstname:req.body.firstname,
+                            file:result.secure_url,
+                            }}, function(err,result1) {
+                            if (err) {
+                             console.log(err);
+                             res.send({message:"file not saved ",status:false})
+                            }
+                            else{
+                                console.log(result1)
+                                res.send({message:"file saved successfully",image:result.secure_url,status:true})
+                            }
+                           });
+                       
+                    }
+                    
+         });
+    }
+    else if(file!==""){
+        userModel.updateMany({ _id:id1}, { $set: {
+            firstname:req.body.firstname,
+            file:file,
+            }}, function(err,result1) {
+            if (err) {
+             console.log(err);
+            }
+            else{
+                console.log(result1)
+                res.send({message:"file saved successfully",image:file})
+            }
+           });
+    }
+   
      console.log(req.body.file)
 }
 

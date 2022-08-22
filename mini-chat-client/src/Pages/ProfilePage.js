@@ -113,10 +113,10 @@ function ProfilePage() {
         const reader= new FileReader()
         reader.readAsDataURL(file)
         reader.onload=()=>{
-        const result=reader.result
-        console.log(reader.result)
-        setresult(result)
-    }
+          const result=reader.result
+          console.log(reader.result)
+          setresult(result)
+        }
           //  const result=reader.result
           //  console.log(result)
       }
@@ -136,9 +136,10 @@ function ProfilePage() {
         },
        
         onSubmit:(values)=>{
+          console.log(result)
           formik.values.file=result;
           formik.values._id=message._id;
-          if(formik.values.file!==formik.initialValues.file){
+          // if(formik.values.file!==formik.initialValues.file){
             var d = new Date();
             var yr=d.getFullYear();
             var mth=d.getMonth();
@@ -161,7 +162,7 @@ function ProfilePage() {
               
              
               })
-          }
+          // }
           if(formik.values.firstname===""){
             formik.values.firstname=message.firstname
           }
@@ -177,9 +178,11 @@ function ProfilePage() {
           // if(myFile.current.value===""){
           //   formik.values.file=message.file
           // }
+          console.log(result)
             axios.post(url1,values).then((res)=>{
             console.log(res)
-            setresult(res.data.image)
+            if(res.status){
+            setresult(res.data.image)}
             console.log(values)
             // window.location.reload()
             })

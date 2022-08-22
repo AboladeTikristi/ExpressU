@@ -23,7 +23,7 @@ import PasswordReset from './Pages/PasswordReset';
 function App() {
   const token=localStorage.token
   const settoken=localStorage.settoken
-  // const endpoint='http://localhost:5001'
+  const endpoint='http://localhost:5001'
   // const socket= useRef(socketClient(endpoint))
   return (
     <>
