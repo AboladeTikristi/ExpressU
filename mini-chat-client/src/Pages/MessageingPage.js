@@ -4,6 +4,8 @@ import pic from "../images/expressU.png"
 import {useNavigate,Link} from 'react-router-dom'
 import axios from 'axios'
 import io from 'socket.io-client'
+import InputEmoji from 'react-input-emoji'
+import {format} from 'timeago.js'
 
 function MessageingPage({}) {
   
@@ -16,20 +18,22 @@ function MessageingPage({}) {
   const [allmessages, setallmessages] = useState([])
   const [sendMessaged, setsendMessaged] = useState(null)
   const [receiveMessage, setreceiveMessage] = useState(null)
+  const [newMessage, setnewMessage] = useState('')
   const navigate=useNavigate()
   const token=localStorage.token
-  const url='http://localhost:5001/allUsers'
-  const url2='http://localhost:5001/presentUser'
-  const url3='http://localhost:5001/allmessages'
-  const messageUrl='http://localhost:5001/messages'
-  const endpoint='http://localhost:8800'
+//   const url='http://localhost:5001/allUsers'
+//   const url2='http://localhost:5001/presentUser'
+//   const url3='http://localhost:5001/allmessages'
+//   const messageUrl='http://localhost:5001/messages'
+//   const endpoint='http://localhost:8800'
   const socket= useRef()
   const [OnlineUsers, setOnlineUsers] = useState([])
 
-//   const url='https://instagram-v-tk.herokuapp.com/allUsers'
-//   const url2='https://instagram-v-tk.herokuapp.com/presentUser'
-//   const url3='https://instagram-v-tk.herokuapp.com/allmessages'
-//   const messageUrl='https://instagram-v-tk.herokuapp.com/messages'
+  const url='https://instagram-v-tk.herokuapp.com/allUsers'
+  const url2='https://instagram-v-tk.herokuapp.com/presentUser'
+  const url3='https://instagram-v-tk.herokuapp.com/allmessages'
+  const messageUrl='https://instagram-v-tk.herokuapp.com/messages'
+     const endpoint='http://localhost:8800'
   const landPage = useRef(null)
   const messageTab = useRef(null)
   const likeIcon = useRef(null)
@@ -161,17 +165,21 @@ function MessageingPage({}) {
     }
     
    }
-   const showSendBtn=()=>{
-    likeIcon.current.style.display='none'
-    sendBtn.current.style.display='block'
-   }
+//    const showSendBtn=()=>{
+//     likeIcon.current.style.display='none'
+//     sendBtn.current.style.display='block'
+//    }
 
+   const handleChange=(newMessage)=>{
+        setnewMessage(newMessage)
+   }
 //    send message onClick handler
     const sendIt=()=>{
-        likeIcon.current.style.display='block'
-        sendBtn.current.style.display='none'
+        // likeIcon.current.style.display='block'
+        // sendBtn.current.style.display='none'
         var sender=presentUser._id
-        var messageSent=messageToSend.current.value;
+        // var messageSent=messageToSend.current.value;
+        var messageSent=newMessage;
         var d = new Date();
         var yr=d.getFullYear();
         var mth=d.getMonth();
@@ -185,6 +193,7 @@ function MessageingPage({}) {
             sender,
             messagePerson,
             messageSent,
+            dated:d,
             date,
             time
         }
@@ -193,7 +202,7 @@ function MessageingPage({}) {
         console.log(detailsArray)
         axios.post(url3,detailsArray).then((res)=>{
             if(res.data.status){
-                messageToSend.current.value="";
+                setnewMessage('')
                 setresponse(res.data.message)
                 console.log(res.data.message)
             }
@@ -324,27 +333,29 @@ function MessageingPage({}) {
                          messages.messageDetails.map((message,i)=>(
                             <div key={i} className='mt-5'>
                          {messages.messageDetails[i].id===presentUser._id?
-                            <div style={{justifyContent:"flex-end",display:" flex",flexDirection: "row"}}>
-                                <div className='w-25 border ps-2 pe-2 border-dark rounded'>
+                            <div style={{justifyContent:"flex-end",display:" flex",flexDirection: "row",}}>
+                                <div className='w-25 ps-2 pe-2  rounded'style={{backgroundImage: 'linear-gradient(red, yellow)'}}>
                                     <small className='float-start text-success'>{presentUser.username}</small>
                                     <br />
                                     <span className='float-start'>
                                         {message.message}
                                     </span><br/>
                                     <small className='float-end text-dark'>{message.timeSent}</small>
+                                    {/* <small className='float-end text-dark'>{format(message.dated)}</small> */}
                                 </div>
                             </div>:
                              messages.messageDetails[i].id!==presentUser._id?
                                 <div
                                 style={{justifyContent:"flex-start",display:" flex",flexDirection: "row"}}>
                                     <div
-                                    className='w-25 border ps-2 pe-2 border-dark rounded'>
+                                    className='w-25  ps-2 pe-2 rounded' style={{backgroundImage: 'linear-gradient(green, yellow)'}}>
                                         <small className='float-start text-warning'>{allUsers[recieveIndex].username}</small>
                                         <br />
                                         <span className='float-start'>
                                             {message.message}
                                         </span><br />
                                         <small className='float-end text-dark'>{message.timeSent}</small>
+                                        {/* <small className='float-end text-dark'>{format(message.dated)}</small> */}
                                     </div>
                                 </div>:
                                   ""
@@ -361,22 +372,28 @@ function MessageingPage({}) {
                   </div>
                 </div>
                 <div style={{position:"sticky",bottom:"0px",height:"50px",backgroundColor:"white",marginTop:"40%"}} 
-                     className='w-100  row border border-dark ms-1 rounded-pill'>
-                        <div className="row my-auto">
-                            <div className="col-1">
-                            <span><i className="fa-regular fa-2x fa-face-smile"></i></span>
+                     className='w-100  row   ms-1 rounded-pill'>
+                        
+                       
+                        <div className="row my-auto ">
+                            <div className="col-1 py-2">
+                            <div className='text-center'><i class="fa-solid fa-paperclip"></i></div>
+                            {/* <span><i className="fa-regular fa-2x fa-face-smile"></i></span> */}
                             </div>
                             <div className="col-9">
-                                <textarea ref={messageToSend}type="text"onClick={()=>showSendBtn()} placeholder='message...' className='form-control  border-0 w-100' rows="1" />
+                                 <InputEmoji
+                                 value={newMessage}
+                                 onChange={handleChange}/>
+                                {/* <textarea ref={messageToSend}type="text"onClick={()=>showSendBtn()} placeholder='message...' className='form-control  border-0 w-100' rows="1" /> */}
                             </div>
-                            <div className="col-2">
-                            <span ref={likeIcon}>
+                            <div className="col-2 text-center py-1">
+                            {/* <span ref={likeIcon}>
                                 <i className="fa-regular fa-2x fa-image ms-1"></i>
                                 <i className="fa-regular fa-2x fa-heart ms-4"></i>
                                 
-                            </span>
-                            <span style={{display:"none"}} ref={sendBtn}>
-                                <button onClick={()=>sendIt()}  className='btn text-primary'>send</button>
+                            </span> */}
+                            <span style={{display:"block"}} ref={sendBtn}>
+                                <button onClick={()=>sendIt()}  className='btn btn-outline-primary'>send</button>
                             </span>
                             </div>
                         </div>

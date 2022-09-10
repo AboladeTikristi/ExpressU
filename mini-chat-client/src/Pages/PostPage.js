@@ -13,10 +13,10 @@ function PostPage() {
     const myFile = useRef(null);
     const myImage = useRef(null);
     const [postImage, setpostImage] = useState("")
-    const url='http://localhost:5001/presentUser'
-    const postUrl='http://localhost:5001/postImage'
-    // const url='https://instagram-v-tk.herokuapp.com/presentUser'
-    // const postUrl='https://instagram-v-tk.herokuapp.com/postImage'
+    // const url='http://localhost:5001/presentUser'
+    // const postUrl='http://localhost:5001/postImage'
+    const url='https://instagram-v-tk.herokuapp.com/presentUser'
+    const postUrl='https://instagram-v-tk.herokuapp.com/postImage'
     useEffect(() => {
         axios.get(url,
             {
@@ -88,7 +88,7 @@ function PostPage() {
           formik.values.name=`${message.firstname} ${message.lastname}`
           formik.values.posterImage=message.file
           formik.values.date=`${day}-${mth+1}-${yr}`
-          formik.values.time=`${hr}:${min}:${sec}`
+          formik.values.time=d;
           formik.values.file=postImage;
           console.log(values)
          

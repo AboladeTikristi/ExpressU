@@ -7,8 +7,8 @@ import pic from "../images/expressU.png"
 
 function SignUp() {
    const navigate = useNavigate()
-   const url='http://localhost:5001/signup'
-  //  const url='https://instagram-v-tk.herokuapp.com/signup'
+  //  const url='http://localhost:5001/signup'
+   const url='https://instagram-v-tk.herokuapp.com/signup'
     const [message, setmessage] = useState("")
     const [status, setstatus] = useState("")
     const formik=useFormik({

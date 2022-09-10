@@ -6,8 +6,8 @@ import { Navbar,Container,Offcanvas,Nav,Dropdown,Form,FormControl,OverlayTrigger
 import {Routes,Route,Navigate,useNavigate,Link,useParams} from 'react-router-dom'
 function Naver() {
   const{id}=useParams("")
-  // const url='https://instagram-v-tk.herokuapp.com/presentUser'
-  const url='http://localhost:5001/presentUser'
+  const url='https://instagram-v-tk.herokuapp.com/presentUser'
+  // const url='http://localhost:5001/presentUser'
   const [message,setmessage] = useState([])
   const navigate=useNavigate()
   const token=localStorage.token

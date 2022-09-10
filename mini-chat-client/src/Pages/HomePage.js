@@ -7,23 +7,26 @@ import Footer from './Footer'
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import FollowModal from './FollowModal'
+import {format} from 'timeago.js'
 
 function HomePage() {
 
-  // const url='https://instagram-v-tk.herokuapp.com/presentUser'
-  // const url2='https://instagram-v-tk.herokuapp.com/allmessages'
-  // const url3= 'https://instagram-v-tk.herokuapp.com/follow'
-  // const url4='https://instagram-v-tk.herokuapp.com/allUsers'
-  // const url5='https://instagram-v-tk.herokuapp.com/postImage'
-  // const url6='https://instagram-v-tk.herokuapp.com/like'
-  // const url7='https://instagram-v-tk.herokuapp.com/comment'
-  const url='http://localhost:5001/presentUser'
-  const url2='http://localhost:5001/allmessages'
-  const url3= 'http://localhost:5001/follow'
-  const url4='http://localhost:5001/allUsers'
-  const url5='http://localhost:5001/postImage'
-  const url6='http://localhost:5001/like'
-  const url7='http://localhost:5001/comment'
+  const url='https://instagram-v-tk.herokuapp.com/presentUser'
+  const url2='https://instagram-v-tk.herokuapp.com/allmessages'
+  const url3= 'https://instagram-v-tk.herokuapp.com/follow'
+  const url4='https://instagram-v-tk.herokuapp.com/allUsers'
+  const url5='https://instagram-v-tk.herokuapp.com/postImage'
+  const url6='https://instagram-v-tk.herokuapp.com/like'
+  const url8='https://instagram-v-tk.herokuapp.com/unlike'
+  const url7='https://instagram-v-tk.herokuapp.com/comment'
+  // const url='http://localhost:5001/presentUser'
+  // const url2='http://localhost:5001/allmessages'
+  // const url3= 'http://localhost:5001/follow'
+  // const url4='http://localhost:5001/allUsers'
+  // const url5='http://localhost:5001/postImage'
+  // const url6='http://localhost:5001/like'
+  // const url8='http://localhost:5001/unlike'
+  // const url7='http://localhost:5001/comment'
 
   // const [sent, setsent] = useState("")
   const [message,setmessage] = useState([])
@@ -68,9 +71,6 @@ function HomePage() {
       setallPosts(res.data.allPosts)
     })
     },[])
-    useEffect(() => {
-    
-    }, [])
     
     const follow=(index)=>{
       console.log(followID.current[index].innerText)
@@ -97,9 +97,28 @@ function HomePage() {
      }
     }
     const like=(index,i)=>{
-      alert(i)
+      if(allPosts[index].likes.includes(allPosts[index].likes.find(el=>el.likerId===message._id)))
+      {
+        var likeId=likeID.current[index].id
+        var likeDetails={
+          postindex:index,
+          sendId:i,
+          likerId:message._id,
+          likedId:likeId,
+          like:true,
+                    }
+        axios.post(url8,likeDetails).then((res)=>{
+        if(res.data.status){
+            likeID.current[index].style.color="black"
+        }
+        else{
+          alert("An error as occured please relike the post")
+        }
+
+      })
+      }
+      else{
       var likeId=likeID.current[index].id
-      alert(likeId)
       var likeDetails={
           sendId:i,
           likerId:message._id,
@@ -108,7 +127,6 @@ function HomePage() {
                     }
       axios.post(url6,likeDetails).then((res)=>{
         if(res.data.status){
-            alert("Liked")
             likeID.current[index].style.color="red"
         }
         else{
@@ -116,6 +134,7 @@ function HomePage() {
         }
 
       })
+    }
       
     }
     const comments=(index)=>{
@@ -164,9 +183,26 @@ function HomePage() {
     // }
   const properties = {
     duration:3000,
-    slidesToShow:1,
-    //  slidesToScroll:2,
+    slidesToShow:4,
+    slidesToScroll:1,
     autoplay: false,
+    indicators:true,
+    responsive:[
+      {
+        breakpoint:500,
+        settings:{
+          slidesToShow:5,
+          slidesToScroll:1,
+        }
+      },
+      {
+        breakpoint:500,
+        settings:{
+          slidesToShow:1,
+          slidesToScroll:2,
+        }
+      }
+    ]
   };
 
   return (
@@ -213,7 +249,7 @@ function HomePage() {
             </div>
             <div className="col-7 ms-2 ms-md-0 ps-2 ps-md-4 col-md-8">
               <span className="mt-5"><b>{post.name}</b></span><br />
-              <span>{post.time}</span> 
+              <span>{format(post.time)}</span> 
             </div>
             <div className="col-2 ps-5 col-md-3">
             <i className="fa-solid fa-ellipsis  float-end"></i>

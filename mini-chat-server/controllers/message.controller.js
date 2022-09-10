@@ -38,6 +38,7 @@ cloudinary.config({
                     action:"sent",
                     id:data.sender,
                     message:data.messageSent,
+                    dated:req.body.dated,
                     timeSent:data.time,
                     dateSent:data.date,
                 }
@@ -76,6 +77,7 @@ const sendMessage=(req,res,)=>{
             action:"sent",
             id:senderId,
             message:message,
+            dated:req.body.dated,
             timeSent:time,
             dateSent:dates,
             
@@ -128,6 +130,7 @@ const sendMessage=(req,res,)=>{
                                     action:"sent",
                                     id:senderId,
                                     message:message,
+                                    dated:req.body.dated,
                                     timeSent:time,
                                     dateSent:dates,
                                     
@@ -180,6 +183,7 @@ const sendMessage=(req,res,)=>{
                             action:"sent",
                             id:senderId,
                             message:message,
+                            dated:req.body.dated,
                             timeSent:time,
                             dateSent:dates,
                             

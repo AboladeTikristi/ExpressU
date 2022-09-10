@@ -238,8 +238,9 @@ const uploadProfile=(req,res)=>{
     console.log(req.body)
     const file=req.body.file 
     const id1=req.body._id
+    let check=file.includes('https://res.cloudinary.com')
     console.log(file)
-    if(file===""){
+    if(check===false){
         cloudinary.v2.uploader.upload(file,
             {folder: 'InstagramProfile',
              public_id:`/${id1}`,
@@ -253,7 +254,15 @@ const uploadProfile=(req,res)=>{
                     else{console.log(result)
                         userModel.updateMany({ _id:id1}, { $set: {
                             firstname:req.body.firstname,
+                            lastname:req.body.lastname,
+                            username:req.body.username,
+                            email:req.body.email,
                             file:result.secure_url,
+                            gender:req.body.gender,
+                            address:req.body.address,
+                            phone:req.body.phone,
+                            bio:req.body.bio,
+
                             }}, function(err,result1) {
                             if (err) {
                              console.log(err);
@@ -261,7 +270,7 @@ const uploadProfile=(req,res)=>{
                             }
                             else{
                                 console.log(result1)
-                                res.send({message:"file saved successfully",image:result.secure_url,status:true})
+                                res.send({message:"file saved successfully!",image:result.secure_url,status:true})
                             }
                            });
                        
@@ -269,10 +278,17 @@ const uploadProfile=(req,res)=>{
                     
          });
     }
-    else if(file!==""){
+    else if(check===true){
         userModel.updateMany({ _id:id1}, { $set: {
             firstname:req.body.firstname,
+            lastname:req.body.lastname,
+            username:req.body.username,
+            email:req.body.email,
             file:file,
+            gender:req.body.gender,
+            address:req.body.address,
+            phone:req.body.phone,
+            bio:req.body.bio,
             }}, function(err,result1) {
             if (err) {
              console.log(err);
@@ -444,6 +460,22 @@ const like=(req,res)=>{
         
     })
 }
+const unlike=(req,res)=>{
+    const unlikeDetails=req.body;
+    console.log(unlikeDetails)
+    postModel.findByIdAndUpdate( {'_id':req.body.sendId},
+     {$pull:{"likes":{"likerId":req.body.likerId}}},(error,result)=>{
+        if(error){
+            console.log(error)
+            res.send({message:'server error',status:false})
+        }
+        else{
+               res.send({message:"Update successful",status:true})
+            }
+          
+     },
+    );
+}
 const comment=(req,res)=>{
     const commentDetails=req.body;
     console.log(commentDetails)
@@ -460,4 +492,4 @@ const comment=(req,res)=>{
         
     })
 }
-module.exports={landingPages,signUp,logIn,allInfo,uploadProfile,follow,getAllUser,getPost,savePost,like,comment,forgetEmail,resetPassword}
+module.exports={landingPages,signUp,logIn,allInfo,uploadProfile,follow,getAllUser,getPost,savePost,like,unlike,comment,forgetEmail,resetPassword}

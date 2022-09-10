@@ -4,7 +4,8 @@ import pic from "../images/expressU.png"
 import {Routes,Route,Navigate,useNavigate,Link} from 'react-router-dom'
 import EmailSent from './EmailSent'
 function ForgetPassword() {
-    const url="http://localhost:5001/forgetPassword"
+    const url="https://instagram-v-tk.herokuapp.com/forgetPassword"
+    // const url="http://localhost:5001/forgetPassword"
     const navigate=useNavigate()
     const [email, setemail] = useState('')
     const [message, setmessage] = useState('')

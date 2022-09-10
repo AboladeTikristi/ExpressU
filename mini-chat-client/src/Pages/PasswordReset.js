@@ -3,7 +3,8 @@ import React,{useState,useEffect} from 'react'
 import pic from "../images/expressU.png"
 import {Routes,Route,Navigate,useNavigate,Link,useLocation} from 'react-router-dom'
 function PasswordReset() {
-    const url="http://localhost:5001/resetPassword"
+    // const url="http://localhost:5001/resetPassword"
+    const url='https://instagram-v-tk.herokuapp.com/resetPassword'
     const navigate=useNavigate()
     const location=useLocation()
     const [email, setemail] = useState('')
